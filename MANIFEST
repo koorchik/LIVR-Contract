@@ -1,0 +1,6 @@
+Build.PL
+Changes
+lib/LIVR/Contract.pm
+MANIFEST			This list of files
+README
+t/01-base.t
