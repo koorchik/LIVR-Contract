@@ -12,9 +12,9 @@ my $builder = Module::Build->new(
         'Test::More' => 0,
     },
     requires => {
-        'perl'                    => '5.010',
-        'Validator::LIVR'         => '0.01',
-        'Class::Method::Modifier' => '0',
+        'perl'                     => '5.010',
+        'Validator::LIVR'          => '0.01',
+        'Class::Method::Modifiers' => '0',
     },
     add_to_cleanup      => [ 'LIVR-Contract-*' ],
     create_makefile_pl => 'traditional',
