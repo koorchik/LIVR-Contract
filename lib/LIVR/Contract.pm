@@ -9,6 +9,7 @@ use Carp qw/croak/;
 use Validator::LIVR;
 use Class::Method::Modifiers qw/install_modifier/;
 use LIVR::Contract::Exception;
+use Scalar::Util qw/blessed/;
 
 our @EXPORT_OK = ( 'contract' );
 our @CARP_NOT = (__PACKAGE__);
@@ -19,7 +20,7 @@ sub contract {
 
     return __PACKAGE__->new(
         'subname' => $subname,
-        'package' => ( caller )[ 0 ]
+        'package' => scalar( caller )
     );
 }
 
@@ -83,7 +84,7 @@ sub enable {
 
             my $is_wantarray = wantarray;
             my $output = $is_wantarray ? [ $orig->( @_ ) ] : $orig->( @_ );
-            
+
             my $prepared_output = $self->_get_output_preparator->( $is_wantarray ? @$output : $output );
             $self->_validate_output( $prepared_output );
 
@@ -118,8 +119,22 @@ sub _get_input_preparator {
     my $self = shift;
 
     return $self->{input_preparator} ||= sub {
-        my ($self, %args) = @_;
-        return \%args;
+        my %numbered;
+        for (my $i=0; $i< @_; $i++) {
+            $numbered{$i} = $_[$i];
+        }
+
+        my %named;
+        foreach ( my $i = @_ % 2; $i < @_; $i += 2 ) {
+            if ( ref $_[$i] ) {
+                undef %named;
+                last;
+            } else {
+                $named{ $_[$i] } = $_[$i+1];
+            }
+        }
+
+        return {%numbered, %named};
     };
 }
 
@@ -127,19 +142,19 @@ sub _get_output_preparator {
     my $self = shift;
 
     return $self->{output_preparator} ||=  sub {
-        my %res;
+        my %numbered;
 
         for (my $i=0; $i< @_; $i++) {
-            $res{$i} = $_[$i];
+            $numbered{$i} = $_[$i];
         }
 
-        return \%res;
+        return \%numbered;
     };
 }
 
 sub _get_on_fail {
     my $self = shift;
-    
+
     return $self->{on_fail} ||=   sub {
         my ( $type, $package, $subname, $errors ) = @_;
 

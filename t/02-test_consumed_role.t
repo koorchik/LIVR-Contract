@@ -7,11 +7,11 @@ use lib "$Bin/lib";
 
 use Test::More;
 
-use LIVRContractSimpleClassExample;
+use LIVRContractSimpleRoleConsumerExample;
 
 subtest 'Test "requires" rules' => sub {
     eval {
-        LIVRContractSimpleClassExample->create_object(id => '0');
+        LIVRContractSimpleRoleConsumerExample->create_object(id => '0');
     };
 
     ok($@, 'Should throw exception');
@@ -19,7 +19,7 @@ subtest 'Test "requires" rules' => sub {
 
     is($@->type, 'input', 'Should be "input" type');
     is($@->subname, 'create_object', 'Should contain name of failed method');
-    is($@->package, 'LIVRContractSimpleClassExample', 'Should contain name of failed package');
+    is($@->package, 'LIVRContractSimpleRoleConsumerExample', 'Should contain name of failed package');
 
     is_deeply($@->errors, { name => 'REQUIRED', id => 'NOT_POSITIVE_INTEGER' }, 'Should  contain errors in Validator::LIVR format');
 };
@@ -27,7 +27,7 @@ subtest 'Test "requires" rules' => sub {
 
 subtest 'Test "ensures" rules' => sub {
     eval {
-        LIVRContractSimpleClassExample->create_object(name => 'Viktor', id => 100 );
+        LIVRContractSimpleRoleConsumerExample->create_object(name => 'Viktor', id => 100 );
     };
 
     ok($@, 'Should throw exception');
@@ -35,7 +35,7 @@ subtest 'Test "ensures" rules' => sub {
 
     is($@->type, 'output', 'Should be "input" type');
     is($@->subname, 'create_object', 'Should contain name of failed method');
-    is($@->package, 'LIVRContractSimpleClassExample', 'Should contain name of failed package');
+    is($@->package, 'LIVRContractSimpleRoleConsumerExample', 'Should contain name of failed package');
 
     is_deeply($@->errors, { 0 => 'NOT_POSITIVE_INTEGER' }, 'Should  contain errors in Validator::LIVR format');
 };
