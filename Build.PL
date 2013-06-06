@@ -14,7 +14,7 @@ my $builder = Module::Build->new(
     requires => {
         'perl'                     => '5.010',
         'Validator::LIVR'          => '0.01',
-        'Class::Method::Modifiers' => '0',
+        'Class::Method::Modifiers' => '2.04',
     },
     add_to_cleanup      => [ 'LIVR-Contract-*' ],
     create_makefile_pl => 'traditional',
