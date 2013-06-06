@@ -14,6 +14,8 @@ use Scalar::Util qw/blessed/;
 our @EXPORT_OK = ( 'contract' );
 our @CARP_NOT = (__PACKAGE__);
 
+our $VERSION = '0.01';
+
 sub contract {
     my $subname = shift;
     croak "Subname is required" unless $subname;
@@ -176,51 +178,65 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
 
 =head1 SYNOPSIS
 
-    # Common usage
-    use LIVR::Contract qw/contract/;
+  # Common usage
+  use LIVR::Contract qw/contract/;
 
-    contract('my_method')->requires({
-        name      => [ 'required' ],
-        id        => [ 'required', 'positive_integer' ]
-    })->ensures({
-        result => ['required', 'positive_integer' ]
-    })->enable();
-
-
-    contract('my_method2')->requires({
-        0  => [ 'required' ]
-        1  => [ 'required', 'positive_integer' ]
-        2  => [ 'required' ],
-    })->ensures({
-        result => ['required', 'positive_integer' ]
-    })->enable();
-
-    sub my_method {
-        my ($self, %named_args) = @_;
-        return 100;
-    }
-
-    sub my_method2 {
-        my ($self, %named_args) = @_;
-        return 100;
-    }
+  contract('my_method')->requires({
+      name      => [ 'required' ],
+      id        => [ 'required', 'positive_integer' ]
+  })->ensures({
+      result => ['required', 'positive_integer' ]
+  })->enable();
 
 
-    # Somewhere in your code
-    $self->my_method(
-        id   => 100,
-        name => 'Some Name',
-    );
+  contract('my_method2')->requires({
+      0  => [ 'required' ]
+      1  => [ 'required', 'positive_integer' ]
+      2  => [ 'required' ],
+  })->ensures({
+      result => ['required', 'positive_integer' ]
+  })->enable();
+
+  sub my_method {
+      my ($self, %named_args) = @_;
+      return 100;
+  }
+
+  sub my_method2 {
+      my ($self, %named_args) = @_;
+      return 100;
+  }
 
 
-    # Somewhere in your code
-    $self->my_method2( 100, 'Some Name');
+  # Somewhere in your code
+  $self->my_method(
+      id   => 100,
+      name => 'Some Name',
+  );
+
+# Somewhere in your code
+$self->my_method2( 100, 'Some Name');
+
+=head1 WARNING
+
+B<This software is under heavy development and considered ALPHA
+quality. Things might be broken, not all
+features have been implemented, and APIs are likely to change. YOU
+HAVE BEEN WARNED.>
 
 =head1 DESCRIPTION
 
 L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR)
 
 See L<https://github.com/koorchik/LIVR> for details.
+
+=head1 TODO
+
+=over 4
+
+=item * Contracts in separate files
+
+=back
 
 =head1 AUTHOR
 
@@ -242,7 +258,7 @@ You can find documentation for this module with the perldoc command.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2012 Viktor Turskyi.
+Copyright 2013 Viktor Turskyi.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
