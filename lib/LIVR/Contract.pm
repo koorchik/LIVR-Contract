@@ -14,7 +14,7 @@ use Scalar::Util qw/blessed/;
 our @EXPORT_OK = ( 'contract' );
 our @CARP_NOT = (__PACKAGE__);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub contract {
     my $subname = shift;
@@ -203,7 +203,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   }
 
   sub my_method2 {
-      my ($self, %named_args) = @_;
+      my ($self, $id, $name) = @_;
       return 100;
   }
 

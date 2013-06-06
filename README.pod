@@ -30,7 +30,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   }
 
   sub my_method2 {
-      my ($self, %named_args) = @_;
+      my ($self, $id, $name) = @_;
       return 100;
   }
 
