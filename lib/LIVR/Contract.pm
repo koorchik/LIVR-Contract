@@ -149,33 +149,34 @@ sub _get_on_fail {
     }
 }
 
+
 =head1 NAME
 
-LIVR::Contract - Design by Contract in Perl with Language Independent Validation Rules (LIVR)
+LIVR::Contract - Design by Contract in Perl with Language Independent Validation Rules (LIVR).
 
 =head1 SYNOPSIS
 
   # Common usage
-  use LIVR::Contract qw/contract/;
+  use LIVR::Contract;
 
   contract 'my_method' => (
       requires => {
-          name      => [ 'required' ],
-          id        => [ 'required', 'positive_integer' ]
+          name => [ 'required' ],
+          id   => [ 'required', 'positive_integer' ]
       },
       ensures => {
-        result => ['required', 'positive_integer' ]
+          0 => ['required', 'positive_integer' ]
       }
   );
 
   contract 'my_method2' => (
       requires => {
-          0  => [ 'required' ]
-          1  => [ 'required', 'positive_integer' ]
-          2  => [ 'required' ],
+          0 => [ 'required' ]
+          1 => [ 'required', 'positive_integer' ]
+          2 => [ 'required' ],
       },
       ensures => {
-          result => ['required', 'positive_integer' ]
+          0 => ['required', 'positive_integer' ]
       }
   );
 
@@ -196,8 +197,8 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
       name => 'Some Name',
   );
 
-# Somewhere in your code
-$self->my_method2( 100, 'Some Name');
+  # Somewhere in your code
+  $self->my_method2( 100, 'Some Name');
 
 =head1 WARNING
 
@@ -208,15 +209,15 @@ HAVE BEEN WARNED.>
 
 =head1 DESCRIPTION
 
-L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR)
+L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR). Uses L<Validator::LIVR> underneath.
 
-See L<https://github.com/koorchik/LIVR> for details.
+See L<https://github.com/koorchik/LIVR> for rules descriptions.
 
 =head1 TODO
 
 =over 4
 
-=item * Contracts in separate files
+=item * Contracts in separate files (Roles)
 
 =back
 
