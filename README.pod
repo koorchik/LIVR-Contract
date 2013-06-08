@@ -8,21 +8,26 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Common usage
   use LIVR::Contract qw/contract/;
 
-  contract('my_method')->requires({
-      name      => [ 'required' ],
-      id        => [ 'required', 'positive_integer' ]
-  })->ensures({
-      result => ['required', 'positive_integer' ]
-  })->enable();
+  contract 'my_method' => (
+      requires => {
+          name      => [ 'required' ],
+          id        => [ 'required', 'positive_integer' ]
+      },
+      ensures => {
+        result => ['required', 'positive_integer' ]
+      }
+  );
 
-
-  contract('my_method2')->requires({
-      0  => [ 'required' ]
-      1  => [ 'required', 'positive_integer' ]
-      2  => [ 'required' ],
-  })->ensures({
-      result => ['required', 'positive_integer' ]
-  })->enable();
+  contract 'my_method2' => (
+      requires => {
+          0  => [ 'required' ]
+          1  => [ 'required', 'positive_integer' ]
+          2  => [ 'required' ],
+      },
+      ensures => {
+          result => ['required', 'positive_integer' ]
+      }
+  );
 
   sub my_method {
       my ($self, %named_args) = @_;

@@ -11,19 +11,21 @@ use Class::Method::Modifiers qw/install_modifier/;
 use LIVR::Contract::Exception;
 use Scalar::Util qw/blessed/;
 
-our @EXPORT_OK = ( 'contract' );
+our @EXPORT = ( 'contract' );
 our @CARP_NOT = (__PACKAGE__);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub contract {
-    my $subname = shift;
+    my ( $subname, %args ) = @_;
     croak "Subname is required" unless $subname;
 
     return __PACKAGE__->new(
-        'subname' => $subname,
-        'package' => scalar( caller )
-    );
+        'subname'  => $subname,
+        'package'  => scalar( caller ),
+        'ensures'  => $args{ensures},
+        'requires' => $args{requires},
+    )->enable();
 }
 
 sub new {
@@ -35,8 +37,8 @@ sub new {
     my $self = bless {
         subname           => $args{subname},
         package           => $args{package},
-        ensures           => $args{requires},
-        requires          => $args{ensures},
+        ensures           => $args{ensures},
+        requires          => $args{requires},
         input_preparator  => $args{input_preparator},
         output_preparator => $args{output_preparator},
         on_fail           => $args{on_fail},
@@ -44,30 +46,6 @@ sub new {
         output_validator  => undef,
     }, $class;
 
-    return $self;
-}
-
-sub ensures {
-    my ( $self, $livr ) = @_;
-    $self->{ensures} = $livr;
-    return $self;
-}
-
-sub requires {
-    my ( $self, $livr ) = @_;
-    $self->{requires} = $livr;
-    return $self;
-}
-
-sub input_preparator {
-    my ( $self, $preparator ) = @_;
-    $self->{input_preparator} = $preparator;
-    return $self;
-}
-
-sub output_preparator {
-    my ( $self, $preparator ) = @_;
-    $self->{output_preparator} = $preparator;
     return $self;
 }
 
@@ -171,7 +149,6 @@ sub _get_on_fail {
     }
 }
 
-
 =head1 NAME
 
 LIVR::Contract - Design by Contract in Perl with Language Independent Validation Rules (LIVR)
@@ -181,21 +158,26 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Common usage
   use LIVR::Contract qw/contract/;
 
-  contract('my_method')->requires({
-      name      => [ 'required' ],
-      id        => [ 'required', 'positive_integer' ]
-  })->ensures({
-      result => ['required', 'positive_integer' ]
-  })->enable();
+  contract 'my_method' => (
+      requires => {
+          name      => [ 'required' ],
+          id        => [ 'required', 'positive_integer' ]
+      },
+      ensures => {
+        result => ['required', 'positive_integer' ]
+      }
+  );
 
-
-  contract('my_method2')->requires({
-      0  => [ 'required' ]
-      1  => [ 'required', 'positive_integer' ]
-      2  => [ 'required' ],
-  })->ensures({
-      result => ['required', 'positive_integer' ]
-  })->enable();
+  contract 'my_method2' => (
+      requires => {
+          0  => [ 'required' ]
+          1  => [ 'required', 'positive_integer' ]
+          2  => [ 'required' ],
+      },
+      ensures => {
+          result => ['required', 'positive_integer' ]
+      }
+  );
 
   sub my_method {
       my ($self, %named_args) = @_;
