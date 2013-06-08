@@ -8,8 +8,9 @@ use Carp qw/croak/;
 
 use Validator::LIVR;
 use Class::Method::Modifiers qw/install_modifier/;
+
 use LIVR::Contract::Exception;
-use Scalar::Util qw/blessed/;
+use LIVR::Contract::ExtraRules;
 
 our @EXPORT = ( 'contract' );
 our @CARP_NOT = (__PACKAGE__);
@@ -77,7 +78,13 @@ sub _validate_input {
     my ( $self, $input ) = @_;
     return unless $self->{requires};
 
-    my $validator = $self->{input_validator} ||= Validator::LIVR->new( $self->{requires} )->prepare();
+    my $validator = $self->{input_validator} ||= Validator::LIVR->new(
+        $self->{requires}
+    )->register_rules(
+        isa     => \&LIVR::Contract::ExtraRules::livr_isa,
+        can     => \&LIVR::Contract::ExtraRules::livr_can,
+        blessed => \&LIVR::Contract::ExtraRules::livr_blessed,
+    )->prepare();
 
     if ( !$validator->validate( $input ) ) {
         $self->_get_on_fail->( 'input', $self->{package}, $self->{subname}, $validator->get_errors() );
@@ -88,7 +95,13 @@ sub _validate_output {
     my ( $self, $output ) = @_;
     return unless $self->{ensures};
 
-    my $validator = $self->{output_validator} ||= Validator::LIVR->new( $self->{ensures} )->prepare();
+    my $validator = $self->{output_validator} ||= Validator::LIVR->new(
+        $self->{ensures}
+    )->register_rules(
+        isa     => \&LIVR::Contract::ExtraRules::livr_isa,
+        can     => \&LIVR::Contract::ExtraRules::livr_can,
+        blessed => \&LIVR::Contract::ExtraRules::livr_blessed,
+    )->prepare();
 
     if ( !$validator->validate( $output ) ) {
         $self->_get_on_fail->( 'output', $self->{package}, $self->{subname}, $validator->get_errors() );
@@ -149,7 +162,6 @@ sub _get_on_fail {
     }
 }
 
-
 =head1 NAME
 
 LIVR::Contract - Design by Contract in Perl with Language Independent Validation Rules (LIVR).
@@ -162,7 +174,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Positional arguments
   contract 'my_method1' => (
       requires => {
-          0 => [ 'required' ]
+          0 => [ 'required', 'blessed' ]
           1 => [ 'required', 'positive_integer' ]
           2 => [ 'required' ],
       },
@@ -174,7 +186,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Named arguments
   contract 'my_method2' => (
       requires => {
-          0    => [ 'required' ],
+          0    => [ 'required', 'blessed' ],
           id   => [ 'required', 'positive_integer' ],
           name => [ 'required' ],
       },
@@ -186,7 +198,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Named arguments in hashref
   contract 'my_method3' => (
       requires => {
-          0 => [ 'required' ],
+          0 => [ 'required', 'blessed' ],
           1 => [ 'required', { nested_object => {
                   id   => [ 'required', 'positive_integer' ],
                   name => [ 'required' ],
@@ -197,7 +209,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
           0 => ['required', 'positive_integer' ]
       }
   );
-  
+
   sub my_method1 {
       my ($self, $id, $name) = @_;
       return 100;
@@ -239,7 +251,8 @@ HAVE BEEN WARNED.>
 
 =head1 DESCRIPTION
 
-L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR). Uses L<Validator::LIVR> underneath.
+L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR). Uses L<Validator::LIVR> underneath
+and adds three extra rules: 'can', 'isa', 'blessed'
 
 See L<https://github.com/koorchik/LIVR> for rules descriptions.
 
@@ -308,7 +321,6 @@ YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
 CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
 CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
 =cut
 

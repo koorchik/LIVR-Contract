@@ -2,6 +2,7 @@ Build.PL
 Changes
 lib/LIVR/Contract.pm
 lib/LIVR/Contract/Exception.pm
+lib/LIVR/Contract/ExtraRules.pm
 MANIFEST			This list of files
 README.pod
 t/01-base.t

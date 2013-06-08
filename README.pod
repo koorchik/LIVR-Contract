@@ -11,7 +11,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Positional arguments
   contract 'my_method1' => (
       requires => {
-          0 => [ 'required' ]
+          0 => [ 'required', 'blessed' ]
           1 => [ 'required', 'positive_integer' ]
           2 => [ 'required' ],
       },
@@ -23,7 +23,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Named arguments
   contract 'my_method2' => (
       requires => {
-          0    => [ 'required' ],
+          0    => [ 'required', 'blessed' ],
           id   => [ 'required', 'positive_integer' ],
           name => [ 'required' ],
       },
@@ -35,7 +35,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Named arguments in hashref
   contract 'my_method3' => (
       requires => {
-          0 => [ 'required' ],
+          0 => [ 'required', 'blessed' ],
           1 => [ 'required', { nested_object => {
                   id   => [ 'required', 'positive_integer' ],
                   name => [ 'required' ],
@@ -46,7 +46,7 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
           0 => ['required', 'positive_integer' ]
       }
   );
-  
+
   sub my_method1 {
       my ($self, $id, $name) = @_;
       return 100;
@@ -88,7 +88,8 @@ HAVE BEEN WARNED.>
 
 =head1 DESCRIPTION
 
-L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR). Uses L<Validator::LIVR> underneath.
+L<LIVR::Contract> design by Contract in Perl with Language Independent Validation Rules (LIVR). Uses L<Validator::LIVR> underneath
+and adds three extra rules: 'can', 'isa', 'blessed'
 
 See L<https://github.com/koorchik/LIVR> for rules descriptions.
 

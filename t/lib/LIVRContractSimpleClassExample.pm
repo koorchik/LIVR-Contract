@@ -7,6 +7,7 @@ use LIVR::Contract;
 
 contract 'create_object_named_input' => (
     requires => {
+        0    => [ 'required', { isa => __PACKAGE__ } ],
         name => [ 'required' ],
         id   => [ 'required', 'positive_integer' ]
     },
@@ -17,6 +18,7 @@ contract 'create_object_named_input' => (
 
 contract 'create_object_positional_input' => (
     requires => {
+        0 => [ 'required', { isa => __PACKAGE__ } ],
         1 => [ 'required', 'positive_integer' ],
         2 => [ 'required' ],
     },
