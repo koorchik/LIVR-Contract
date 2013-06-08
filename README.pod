@@ -8,17 +8,8 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
   # Common usage
   use LIVR::Contract;
 
-  contract 'my_method' => (
-      requires => {
-          name => [ 'required' ],
-          id   => [ 'required', 'positive_integer' ]
-      },
-      ensures => {
-          0 => ['required', 'positive_integer' ]
-      }
-  );
-
-  contract 'my_method2' => (
+  # Positional arguments
+  contract 'my_method1' => (
       requires => {
           0 => [ 'required' ]
           1 => [ 'required', 'positive_integer' ]
@@ -29,25 +20,64 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
       }
   );
 
-  sub my_method {
-      my ($self, %named_args) = @_;
-      return 100;
-  }
+  # Named arguments
+  contract 'my_method2' => (
+      requires => {
+          0    => [ 'required' ],
+          id   => [ 'required', 'positive_integer' ],
+          name => [ 'required' ],
+      },
+      ensures => {
+          0 => ['required', 'positive_integer' ]
+      }
+  );
 
-  sub my_method2 {
+  # Named arguments in hashref
+  contract 'my_method3' => (
+      requires => {
+          0 => [ 'required' ],
+          1 => [ 'required', { nested_object => {
+                  id   => [ 'required', 'positive_integer' ],
+                  name => [ 'required' ],
+              }
+          }
+      },
+      ensures => {
+          0 => ['required', 'positive_integer' ]
+      }
+  );
+  
+  sub my_method1 {
       my ($self, $id, $name) = @_;
       return 100;
   }
 
+  sub my_method2 {
+      my ($self, %named_args) = @_;
+      return 100;
+  }
+
+  sub my_method3 {
+      my ($self, $named_args_hashref) = @_;
+      return 100;
+  }
 
   # Somewhere in your code
-  $self->my_method(
+  $self->my_method1( 100, 'Some Name');
+
+  # Somewhere in your code
+  $self->my_method2(
       id   => 100,
       name => 'Some Name',
   );
 
   # Somewhere in your code
-  $self->my_method2( 100, 'Some Name');
+  $self->my_method3({
+      id   => 100,
+      name => 'Some Name',
+  });
+
+
 
 =head1 WARNING
 

@@ -7,6 +7,8 @@ Revision history for LIVR-Contract
         Fixed POD typo
 
 0.03 
-
         Changed contract difinition to be Moose like
 
+0.04
+        Updated POD
+  
