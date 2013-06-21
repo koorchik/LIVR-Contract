@@ -188,10 +188,10 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
       requires => {
           0    => [ 'required', 'blessed' ],
           id   => [ 'required', 'positive_integer' ],
-          name => [ 'required' ],
+          name => 'required',
       },
       ensures => {
-          0 => ['required', 'positive_integer' ]
+          0 => [ 'required', 'positive_integer' ]
       }
   );
 
@@ -200,10 +200,9 @@ LIVR::Contract - Design by Contract in Perl with Language Independent Validation
       requires => {
           0 => [ 'required', 'blessed' ],
           1 => [ 'required', { nested_object => {
-                  id   => [ 'required', 'positive_integer' ],
-                  name => [ 'required' ],
-              }
-          }
+              id   => [ 'required', 'positive_integer' ],
+              name => [ 'required' ],
+          }}]
       },
       ensures => {
           0 => ['required', 'positive_integer' ]
@@ -321,6 +320,7 @@ YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
 CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
 CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 
 =cut
 
